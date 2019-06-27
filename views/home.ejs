@@ -1,0 +1,49 @@
+<html lang="en">
+
+<head>
+    <% include ../views/css %>
+    <style>
+        .center {
+            margin: auto;
+            width: 50%;
+            padding: 10px;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+    </style>
+    <title>Home Sweet Home</title>
+</head>
+
+<body>
+    <% include ../views/navbar %>
+    <div class="card center" style="width: 80%; height: 100%;">
+        <div class="card-body">
+            <label>ExpressJS App</label>
+            <h1>Berhasil Loginnnnnn
+            </h1>
+            <p>Session : <%= nama %></p>
+            <label>Page Lain :
+                <% include ../views/test %></label>
+            <Br>
+            <button class="btn btn-primary" type="button" onclick="cobaAjax();">Button</button>
+        </div>
+    </div>
+    <% include ../views/footer %>
+</body>
+<% include ../views/script %>
+<script>
+    var url1 = window.location.href;
+    var myVar = "<%- nama %>";
+    function cobaAjax() {
+        $.ajax({
+            method: "POST",
+            url: url1, success: function (result) {
+                $("#div1").html(result);
+            },
+            data : {Name : 'rahmat'}
+            
+        });
+    }
+</script>
+
+</html>

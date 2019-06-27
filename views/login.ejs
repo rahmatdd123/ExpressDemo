@@ -1,0 +1,42 @@
+<html lang="en">
+
+<head>
+    <% include ../views/css %>
+    <style>
+        .center {
+            margin: auto;
+            width: 50%;
+            padding: 10px;
+            margin-top: 10%;
+        }
+    </style>
+    <title>Login Gan</title>
+</head>
+
+<body>
+    <div class="card center" style="width: 50%;">
+        <div  class="card-body">
+            <label>ExpressJS App</label>
+            <form action="/" method="POST">
+                <h4>Login Gan</h1>
+                    <div class="form-group">
+                        <label>UserName</label>
+                        <input type="text" placeholder="Username" class="form-control" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" placeholder="Password" class="form-control" name="password" required>
+                    </div>
+                    <button type="submit" value="Submit" class="btn btn-primary">Login</button>
+            </form>
+            <%if (pesan != null) { %>
+                <%- pesan %>
+                <% } %>
+            </br>
+            <label>Register <a href="./register">Here</a></label>
+        </div>
+    </div>
+</body>
+<% include ../views/script %>
+
+</html>
