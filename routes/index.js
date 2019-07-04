@@ -33,11 +33,11 @@ passport.use(new LocalStrategy(
   function(username, password, done) {
       Login.findOne({
         username: username
-      }, function(err, user, abc) {
-        
-        if (err) {
-          return done(err);
-        }
+    }, function (err, user, abc) {
+
+      if (err) {
+        return done(err);
+      }
 
         if (!user) {
           usernametidakada = true;
@@ -63,6 +63,7 @@ passport.use(new LocalStrategy(
           }
           else{
             passwordsalah = true;
+          return done(null, false);
           }
         }
       });
