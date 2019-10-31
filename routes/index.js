@@ -8,12 +8,8 @@ const auth = require('http-auth');
 const basic = auth.basic({
   file: path.join(__dirname, '../users.htpasswd'),
 });
-var app = express();
-var cookieParser = require('cookie-parser');
-var session = require('express-session');
 var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
-var helmet = require('helmet')
 var usernametidakada = false;
 var passwordsalah = false;
 const crypto = require('crypto');
