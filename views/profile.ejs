@@ -1,0 +1,52 @@
+<html lang="en">
+
+<head>
+    <% include ../views/css %>
+    <style>
+        .center {
+            margin: auto;
+            width: 50%;
+            padding: 10px;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+        .profilePhoto{
+            height: 80px;
+            width: 80px;
+        }
+    </style>
+    <title>Profile</title>
+</head>
+
+<body>
+    <% include ../views/navbar %>
+    <div class="card center" style="width: 80%; height: 100%;">
+        <div class="card">
+            <img class="card-img-top" style="width: 100%; height:35%;"
+                src="https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                alt="Card image cap">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-1">
+                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" class="rounded-circle float-left profilePhoto" alt="Cinque Terre">
+                    </div>
+                    <div class="col-md-10">
+                        <h5 class="card-title">Rahmat</h5>
+                    </div>
+                </div>
+                <br>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                    card's
+                    content.</p>
+                <div class="card">
+                    <div class="card-body">
+                        <label>Looping Here</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% include ../views/footer %>
+</body>
+
+</html>

@@ -11,38 +11,197 @@
             margin-bottom: auto;
         }
     </style>
-    <title>Home Sweet Home</title>
+    <title>Home</title>
 </head>
 
 <body>
     <% include ../views/navbar %>
-    <div class="card center" style="width: 80%; height: 100%;">
-        <div class="card-body">
-            <label>ExpressJS App</label>
-            <h1>Berhasil Loginnnnnn
-            </h1>
-            <p>Session : <%= nama %></p>
-            <label>Page Lain :
-                <% include ../views/test %></label>
-            <Br>
-            <button class="btn btn-primary" type="button" onclick="cobaAjax();">Button</button>
+    <div ng-app="mainApp" ng-controller="homeController">
+        <div class="card center" style="width: 80%; min-height: 100%!important;">
+            <div class="card-body">
+                <label>ExpressJS App</label>
+                <h1>Berhasil Loginnnnnn</h1>
+                <p>Session : <%= nama %></p>
+                <!-- <label>Page Lain : <% include ../views/test %></label> -->
+                <br />
+                <div class="card">
+                    <div class="card-body">
+                        <form id="formTodo" ng-submit="submitToDo()">
+                            <label class="control-label">Task Name</label>
+                            <input class="form-control inputForm" name="TaskName" ng-model="formData.TaskName"
+                                 required />
+                            <label class="control-label">Task Details</label>
+                            <input class="form-control inputForm" name="TaskDetails"
+                                ng-model="formData.TaskDetails" />
+                            <label class="control-label">Task Date</label>
+                            <input class="form-control inputForm datePicker" name="TaskDate" required
+                                ng-model="formData.TaskDate" autocomplete="off"/>
+                            <br>
+                            <input type="submit" value="Submit" class="btn btn-primary">
+                        </form>
+                    </div>
+                </div>
+                <br>
+                <div ng-repeat="x in task" class="alert alert-info" role="alert">
+                    Task Name : {{x.TaskName}}
+                    <br>
+                    Task Detail : {{x.TaskDetails}}
+                    <br>
+                    Task Date : {{x.TaskDate}}
+                    <br>
+                    Task Status : {{x.Status}}
+                    <br>
+                    <br>
+                    <button class="btn btn-danger" ng-click="deleteTask(x.Id);">Delete</button>
+                    <button class="btn btn-primary" ng-click="editTask(x);">Edit</button>
+                </div>
+            </div>
+            <!-- <ul>
+                        <% status.forEach(function(status) { %>
+                            <li><%= status.content %></li>
+                        <% }); %>
+                      </ul> -->
         </div>
     </div>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Update Task</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control" id="edtTaskId" type="text" style="display: none;"
+                     ng-model="editData.TaskId" />
+
+                    <label class="label-control">Task Name</label>
+                    <input class="form-control" id="edtTaskName" type="text" placeholder="Task Name"
+                        ng-model="editData.TaskName" />
+
+                    <label class="label-control">Task Details</label>
+                    <input class="form-control" id="edtTaskDetails" type="text" placeholder="Task Details"
+                        ng-model="editData.TaskDetails" />
+
+                    <label class="label-control">Task Date</label>
+                    <input class="form-control datePicker" id="edtTaskDate" type="text" placeholder="Task Date"
+                        ng-model="editData.TaskDate" autocomplete="off"/>
+
+                    <label class="label-control">Task Status</label>
+                    <select class="form-control" id="edtTaskStatus" ng-model="editData.TaskStatus">
+                        <option value="1">Waiting</option>
+                        <option value="2">Pending</option>
+                        <option value="3">Done</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="updateTask();">Update</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <% include ../views/footer %>
 </body>
 <% include ../views/script %>
 <script>
+    var taskArray = [];
+    window.onload = function () {
+        $('.datePicker').datepicker({
+            autoclose: true,
+            format: 'dd/mm/yyyy',
+            // startDate: start,
+            // endDate: end,
+            clearBtn: true
+         });
+        // getTodo();
+    }
+    var mainApp = angular.module("mainApp", ['ui.bootstrap'])
+    
+
+    mainApp.controller('homeController', function ($scope, $http, $window, $timeout, $interval) {
+        $scope.task;
+        $scope.formData = {};
+        $scope.editData = {};
+        $scope.alert = alert;
+        var getTodo = function () {
+            $http({
+                method: 'GET',
+                url: './api/gettodo'
+            }).then(function (response) {
+                $scope.taskArray = "";
+                $scope.task = response.data[0];
+            });
+        }
+        $scope.submitToDo = function () {
+            this.formData.Username = username;
+            $http({
+                method: 'POST',
+                data: this.formData,
+                url: './api/createtodo',
+            }).then(function (response) {
+                getTodo();
+            });
+            this.formData = {};
+        }
+        $scope.editTask = function (x) {
+            debugger;
+            console.log(this.editData)
+            $('#edtTaskId').val(x.Id);
+            $('#edtTaskName').val(x.TaskName);
+            $('#edtTaskDetails').val(x.TaskDetails);
+            $('#edtTaskDate').val(x.TaskDate);
+            $('#edtTaskStatus').val(x.TaskStatus).change();
+            $("#myModal").modal();
+        }
+        $scope.deleteTask = function (x) {
+            var isConfirm = confirm("Are you sure to delete this?");
+            if (isConfirm == true) {
+                $http({
+                    method: 'POST',
+                    data: { Id: x },
+                    url: './api/deleteTask',
+                }).then(function (response) {
+                    getTodo();
+                });
+            }
+        }
+      
+        getTodo()
+    });
     var url1 = window.location.href;
-    var myVar = "<%- nama %>";
+    var username = "<%- nama %>";
     function cobaAjax() {
         $.ajax({
             method: "POST",
             url: url1, success: function (result) {
                 $("#div1").html(result);
             },
-            data : {Name : 'rahmat'}
-            
+            data: { Name: 'rahmat' }
+
         });
+    }
+    function updateTask (){
+        debugger;
+        var obj = {
+            Id : document.getElementById('edtTaskId').value,
+            TaskName :  document.getElementById('edtTaskName').value,
+            TaskDetails : document.getElementById('edtTaskDetails').value,
+            TaskDate : document.getElementById('edtTaskDate').value,
+            TaskStatus : document.getElementById('edtTaskStatus').value
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', './api/updateTask')
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(obj))
+        xhr.onload = function() {
+            alert(this.responseText)
+            window.location.reload();
+            // setTimeout(function(){  window.location.reload(); }, 1500);
+        }
     }
 </script>
 

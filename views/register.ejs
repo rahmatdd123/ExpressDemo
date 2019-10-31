@@ -1,9 +1,230 @@
+<html lang="en">
+
 <head>
         <% include ../views/css %>
+        <title>Register</title>
+        <style>
+                .center {
+                        margin: auto;
+                        width: 50%;
+                        padding: 10px;
+                        margin-top: 10%;
+                        margin-bottom: 10%;
+                }
+        </style>
 </head>
-<body>
-        <label>register gan</label>
-        
+
+<body ng-app="regForm">
+        <dvi class="center" style="height: 100%;">
+                <div class="card center">
+                        <div class="card-body">
+                                <h4 class="card-title">Register</h4>
+                                <form ng-controller="registerController" method="POST">
+                                        <div class="form-group">
+                                                <label for="regUsername">Username</label>
+                                                <input type="text" id="regUsername" class="form-control"
+                                                        placeholder="Masukan Username" ng-model="regUsername" required
+                                                        minlength="3" ng-keyup="userOnKeyUp(regUsername, $event)"
+                                                        onkeypress="return AvoidSpace(event)" autocomplete="off" pattern="[a-zA-Z0-9-]+">
+                                        </div>
+                                        <div class="form-group">
+                                                <label for="regPassword1">Password</label>
+                                                <input type="password" class="form-control" id="regPassword1"
+                                                        placeholder="Password" ng-model="regPassword1" required
+                                                        minlength="8" ng-keyup="pwd1Keyup(regPassword1)">
+                                        </div>
+                                        <div class="form-group">
+                                                <label for="regPassword2">Confirm Password</label>
+                                                <input type="password" class="form-control" id="regPassword2"
+                                                        placeholder="Password" ng-model="regPassword2" required
+                                                        minlength="8" ng-keyup="pwd2keyup(regPassword2)">
+                                        </div>
+                                        <button type="submit" id="btnRegSubmit" class="btn btn-primary"
+                                                ng-click="btnRegisterClick()">Register</button>
+                                </form>
+                                <label>Login <a href="../">Here</a></label>
+                        </div>
+                </div>
+        </dvi>
+        <% include ../views/footer %>
 </body>
 
 <% include ../views/script %>
+<script>
+        angular.module("regForm", [])
+
+                .controller("registerController", function ($scope, $http) {
+                        $scope.window = window;
+                        $scope.alert = alert;
+                        $scope.regUsername = "";
+                        $scope.regPassword1 = "";
+                        $scope.regPassword2 = "";
+                        var url = "../api/register";
+
+                        $scope.userOnKeyUp = function (value, event) {
+                                if (value == undefined || value == "") {
+                                        debugger;
+                                        angular.element(document.getElementById('regUsername')).addClass("is-invalid");
+                                }
+                                else {
+                                        $.ajax({
+                                                url: '../api/chkUser',
+                                                data: { username: this.regUsername },
+                                                headers: {
+                                                        "Authorization": "Basic " + btoa("rahmat" + ":" + "rahmat")
+                                                },
+
+                                                dataType: "json",
+                                                type: "POST",
+                                                contentType: "application/x-www-form-urlencoded",
+                                                success: function (data, status) {
+                                                        if (data.Result == 0) {
+                                                                if (angular.element(document.getElementById('regUsername')).hasClass("is-valid")) {
+                                                                        angular.element(document.getElementById('regUsername')).removeClass("is-valid");
+                                                                        angular.element(document.getElementById('regUsername')).addClass("is-invalid");
+                                                                }
+                                                                else {
+
+                                                                        angular.element(document.getElementById('regUsername')).addClass("is-invalid");
+                                                                }
+                                                        }
+                                                        else {
+                                                                if (angular.element(document.getElementById('regUsername')).hasClass("is-invalid")) {
+                                                                        angular.element(document.getElementById('regUsername')).removeClass("is-invalid");
+                                                                        angular.element(document.getElementById('regUsername')).addClass("is-valid");
+                                                                }
+                                                                else {
+                                                                        angular.element(document.getElementById('regUsername')).addClass("is-valid");
+                                                                }
+                                                        }
+                                                },
+                                                error: function (jqXHR, exception, errorThrown) {
+                                                        debugger;
+                                                        alert(errorThrown);
+                                                }
+                                        })
+                                }
+                        }
+                        //input pwd1
+                        $scope.pwd1Keyup = function (value) {
+                                angular.element(document.getElementById('regPassword1')).addClass("is-invalid");
+                                if (value == undefined || value == "") {
+                                        if (angular.element(document.getElementById('regPassword1')).hasClass("is-valid")) {
+                                                angular.element(document.getElementById('regPassword1')).removeClass("is-valid");
+                                                angular.element(document.getElementById('regPassword1')).addClass("is-invalid");
+                                        }
+                                        else {
+
+                                                angular.element(document.getElementById('regPassword1')).addClass("is-invalid");
+                                        }
+                                }
+                                else {
+                                        if (angular.element(document.getElementById('regPassword1')).hasClass("is-invalid")) {
+                                                angular.element(document.getElementById('regPassword1')).removeClass("is-invalid");
+                                                angular.element(document.getElementById('regPassword1')).addClass("is-valid");
+                                        }
+                                        else {
+
+                                                angular.element(document.getElementById('regPassword1')).addClass("is-valid");
+                                        }
+
+                                }
+                        }
+
+                        $scope.pwd2keyup = function (value) {
+                                angular.element(document.getElementById('regPassword2')).addClass("is-invalid");
+                                if (value != this.regPassword1 || value == "" || value == undefined) {
+                                        if (angular.element(document.getElementById('regPassword2')).hasClass("is-valid")) {
+                                                angular.element(document.getElementById('regPassword2')).removeClass("is-valid");
+                                                angular.element(document.getElementById('regPassword2')).addClass("is-invalid");
+                                        }
+                                        else {
+
+                                                angular.element(document.getElementById('regPassword2')).addClass("is-invalid");
+                                        }
+                                }
+                                else {
+                                        if (angular.element(document.getElementById('regPassword2')).hasClass("is-invalid")) {
+                                                angular.element(document.getElementById('regPassword2')).removeClass("is-invalid");
+                                                angular.element(document.getElementById('regPassword2')).addClass("is-valid");
+                                        }
+                                        else {
+
+                                                angular.element(document.getElementById('regPassword2')).addClass("is-valid");
+                                        }
+                                }
+                        }
+
+                        //btn register
+                        $scope.btnRegisterClick = function () {
+                                var data1 = { 'username': this.regUsername, 'password': this.regPassword1 };
+                                if (this.regUsername != "" && this.regPassword1 != "" && this.regPassword2) {
+                                        if (this.regUsername.length > 2 && this.regPassword1.length > 7 && this.regPassword2.length > 7) {
+                                                if (this.regPassword1 != this.regPassword2) {
+                                                        alert('password does not match')
+                                                }
+                                                else {
+                                                        //  $http({
+                                                        //    method: 'POST',
+                                                        //    url: url,
+                                                        //    data : data1,
+                                                        //    responseType:'json',
+                                                        //    headers: {
+                                                        //        'Authorization': 'Basic ' + btoa("rahmat" + ":" + "rahmat"),
+                                                        //        'Content-Type': 'application/x-www-form-urlencoded'
+                                                        //    }
+                                                        // }).then(function (response) {
+                                                        //         debugger;
+                                                        //    if (response.data == "ok") {
+                                                        //        alert("hahahhahahahahahwhewaheahweah");
+                                                        //    }
+                                                        // });
+
+                                                        $.ajax({
+                                                                url: '../api/register',
+                                                                data: data1,
+                                                                headers: {
+                                                                        "Authorization": "Basic " + btoa("rahmat" + ":" + "rahmat")
+                                                                },
+
+                                                                dataType: "json",
+                                                                type: "POST",
+                                                                contentType: "application/x-www-form-urlencoded",
+                                                                success: function (data, status) {
+                                                                        debugger;
+                                                                        alert(data.Pesan);
+                                                                        if (data.Status == 1) {
+                                                                                $('#regUsername').val('');
+                                                                                $('#regPassword1').val('');
+                                                                                $('#regPassword2').val('');
+                                                                        }
+                                                                },
+                                                                error: function (jqXHR, exception, errorThrown) {
+                                                                        debugger;
+                                                                        alert(errorThrown);
+                                                                }
+                                                        })
+                                                }
+                                        }
+                                }
+                        }
+                });
+</script>
+<script>
+        function AvoidSpace(event) {
+                var k = event ? event.which : window.event.keyCode;
+                if (k == 32) return false;
+
+                var character = String.fromCharCode(event.keyCode);
+                return isValid(character);
+        }
+        function isValid(str) {
+                return !/[~`!@#$%\^&*()+=\-\[\]\\';,/{}|\\":<>\?]/g.test(str);
+        }
+
+        $('#regUsername').bind("paste", function (e) {
+                e.preventDefault();
+        });
+</script>
+
+</html>
