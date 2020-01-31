@@ -143,14 +143,18 @@ router.get('/logout', function (req, res) {
   });
 })
 
+router.get('/getreact', function (req, res) {
+  res.sendFile('./public/build/index.html')
+})
+
 router.get('/profile', function (req, res) {
-  if (req.user == token) {
+  // if (req.user == token) {
     var userData = jwt.verify(token, secret)
     res.render('profile', { nama: userData.username, profileName : req.params.username})
-  }
-  else {
-    res.redirect('/');
-  }
+  // }
+  // else {
+  //   res.redirect('/');
+  // }
 })
 
 //API
