@@ -27,7 +27,7 @@ const sql = require("mssql"); // sql package
 const config = {
     user: 'sa',
     password: 'password.1',
-    server: 'LAPTOP-SR79R20E', 
+    server: 'RAHMATKU', 
     database: 'TODO' 
 };
 const testService= require('../services/services') // calling another js file (services)
